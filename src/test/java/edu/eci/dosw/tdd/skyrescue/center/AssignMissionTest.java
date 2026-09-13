@@ -28,6 +28,9 @@ class AssignMissionTest {
         assertEquals("OP1", mission.getOperator().getId());
         assertEquals("D1", mission.getDrone().getId());
         assertFalse(drone.isAvailable());
+
     }
+
+    
 
 }

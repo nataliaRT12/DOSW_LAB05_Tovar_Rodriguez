@@ -2,6 +2,7 @@ package edu.eci.dosw.tdd.skyrescue.center;
 
 import edu.eci.dosw.tdd.skyrescue.drone.Drone;
 import edu.eci.dosw.tdd.skyrescue.mission.Mission;
+import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
 import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
 
 import java.util.ArrayList;
@@ -85,26 +86,35 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
-        // TODO Implement using TDD.
-        return null;
+        RescueOperator operator = findOperatorById(operatorId);
+        Drone drone = findDroneById(droneId);
+
+        Mission mission = new Mission(
+                java.util.UUID.randomUUID().toString(),
+                location,
+                distanceKm,
+                drone,
+                operator,
+                java.time.LocalDateTime.now(),
+                MissionStatus.ACTIVE);
+
+        drone.setAvailable(false);
+        missions.add(mission);
+        return mission;
     }
 
-    /**
-     * Completes an active mission.
-     *
-     * Rules:
-     * - missionId must be valid.
-     * - The mission must exist.
-     * - An already COMPLETED mission cannot be completed again.
-     * - The mission status changes to COMPLETED.
-     * - The end date is the current date/time.
-     * - The drone assigned to the mission becomes available again.
-     *
-     * Suggested error policy:
-     * - Invalid/nonexistent mission -> IllegalArgumentException.
-     * - Mission already completed -> IllegalStateException.
-     *
-     * @param missionId mission identifier.
+    private RescueOperator findOperatorById(String operatorId) {
+        return operators.stream()
+                .filter(op -> op.getId().equals(operatorId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Drone findDroneById(String droneId) {
+        return drones.get(droneId);
+    }
+     
+     /* @param missionId mission identifier.
      * @return completed mission.
      */
     public Mission completeMission(String missionId) {
