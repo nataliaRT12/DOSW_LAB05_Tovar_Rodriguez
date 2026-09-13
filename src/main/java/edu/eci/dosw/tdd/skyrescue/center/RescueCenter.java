@@ -55,7 +55,6 @@ public class RescueCenter {
         return !drones.containsKey(id);
     }
 
-
     /**
      * Assigns an emergency mission to an operator and an available drone.
      *
@@ -85,7 +84,10 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
-        // TODO Implement using TDD.
+        Drone drone = drones.get(droneId);
+        if (distanceKm > drone.getMaxRangeKm()) {
+            throw new IllegalArgumentException("Distance exceeds drone autonomy");
+        }
         return null;
     }
 
