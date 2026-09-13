@@ -100,6 +100,10 @@ public class RescueCenter {
 
     public Mission completeMission(String missionId) {
         Mission mission = findMission(missionId);
+        if (mission == null) {
+            throw new IllegalArgumentException("Mission does not exist");
+        }
+
         mission.setStatus(MissionStatus.COMPLETED);
         mission.setEndDate(LocalDateTime.now());
         mission.getDrone().setAvailable(true);
