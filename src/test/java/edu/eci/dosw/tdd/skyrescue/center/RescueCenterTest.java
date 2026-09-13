@@ -20,4 +20,17 @@ class RescueCenterTest {
         assertTrue(result);
     }
 
+    @Test
+    void shouldNotRegisterDroneWhenDroneIsNull() {
+        // Arrange
+        RescueCenter center = new RescueCenter();
+
+        // Act
+        boolean result = center.addDrone(null);
+
+        // Assert
+        assertFalse(result);
+    }
+
+
 }
