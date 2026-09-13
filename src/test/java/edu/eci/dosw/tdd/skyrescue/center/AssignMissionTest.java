@@ -28,7 +28,6 @@ class AssignMissionTest {
         assertEquals("OP1", mission.getOperator().getId());
         assertEquals("D1", mission.getDrone().getId());
         assertFalse(drone.isAvailable());
-
     }
 
     @Test
@@ -42,6 +41,21 @@ class AssignMissionTest {
         assertThrows(IllegalArgumentException.class,
                 () -> center.assignMission("OP1", "D-UNKNOWN", "Bogota", 10));
     }
- 
 
+    @Test
+    void shouldNotAssignMissionWhenDroneIsBusy() {
+        // Arrange
+        RescueCenter center = new RescueCenter();
+        RescueOperator operator1 = new RescueOperator("OP1", "Carlos");
+        RescueOperator operator2 = new RescueOperator("OP2", "Ana");
+        Drone drone = new Drone("D1", "Matrice300", 20);
+        center.addOperator(operator1);
+        center.addOperator(operator2);
+        center.addDrone(drone);
+        center.assignMission("OP1", "D1", "Bogota", 10);
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class,
+                () -> center.assignMission("OP2", "D1", "Medellin", 10));
+    }
 }
