@@ -2,12 +2,15 @@ package edu.eci.dosw.tdd.skyrescue.center;
 
 import edu.eci.dosw.tdd.skyrescue.drone.Drone;
 import edu.eci.dosw.tdd.skyrescue.mission.Mission;
+import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
 import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Coordinates drones, operators and emergency missions.
@@ -93,7 +96,23 @@ public class RescueCenter {
         if (distanceKm > drone.getMaxRangeKm()) {
             throw new IllegalArgumentException("Distance exceeds drone autonomy");
         }
-        return null;
+
+        if (hasActiveMission(operatorId)) {
+            throw new IllegalStateException("Operator already has an active mission");
+        }
+
+        Mission mission = new Mission(
+                UUID.randomUUID().toString(),
+                location,
+                distanceKm,
+                drone,
+                operator,
+                LocalDateTime.now(),
+                MissionStatus.ACTIVE);
+
+        drone.setAvailable(false);
+        missions.add(mission);
+        return mission;
     }
 
     private RescueOperator findOperator(String operatorId) {
@@ -103,6 +122,16 @@ public class RescueCenter {
             }
         }
         return null;
+    }
+
+    private boolean hasActiveMission(String operatorId) {
+        for (Mission mission : missions) {
+            if (mission.getOperator().getId().equals(operatorId)
+                    && mission.getStatus() == MissionStatus.ACTIVE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
