@@ -51,9 +51,25 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
-        RescueOperator operator = findOperator(operatorId);
+        
         Drone drone = drones.get(droneId);
-        validateMissionAssignment(operator, drone, operatorId, distanceKm);
+        if (drone == null) {
+            throw new IllegalArgumentException("Drone not found: " + droneId);
+        }
+        if (!drone.isAvailable()) {
+            throw new IllegalStateException("Drone is not available: " + droneId);
+        }
+
+        RescueOperator operator = findOperator(operatorId);
+        if (operator == null) {
+            throw new IllegalArgumentException("Operator does not exist");
+        }
+        if (distanceKm > drone.getMaxRangeKm()) {
+            throw new IllegalArgumentException("Distance exceeds drone autonomy");
+        }
+        if (hasActiveMission(operatorId)) {
+            throw new IllegalStateException("Operator already has an active mission");
+        }
 
         Mission mission = new Mission(
                 UUID.randomUUID().toString(),
@@ -67,19 +83,6 @@ public class RescueCenter {
         drone.setAvailable(false);
         missions.add(mission);
         return mission;
-    }
-
-    private void validateMissionAssignment(
-            RescueOperator operator, Drone drone, String operatorId, int distanceKm) {
-        if (operator == null) {
-            throw new IllegalArgumentException("Operator does not exist");
-        }
-        if (distanceKm > drone.getMaxRangeKm()) {
-            throw new IllegalArgumentException("Distance exceeds drone autonomy");
-        }
-        if (hasActiveMission(operatorId)) {
-            throw new IllegalStateException("Operator already has an active mission");
-        }
     }
 
     private RescueOperator findOperator(String operatorId) {
