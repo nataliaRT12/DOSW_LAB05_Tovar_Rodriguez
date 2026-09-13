@@ -52,18 +52,8 @@ public class RescueCenter {
             String location,
             int distanceKm) {
         RescueOperator operator = findOperator(operatorId);
-        if (operator == null) {
-            throw new IllegalArgumentException("Operator does not exist");
-        }
-
         Drone drone = drones.get(droneId);
-        if (distanceKm > drone.getMaxRangeKm()) {
-            throw new IllegalArgumentException("Distance exceeds drone autonomy");
-        }
-
-        if (hasActiveMission(operatorId)) {
-            throw new IllegalStateException("Operator already has an active mission");
-        }
+        validateMissionAssignment(operator, drone, operatorId, distanceKm);
 
         Mission mission = new Mission(
                 UUID.randomUUID().toString(),
@@ -77,6 +67,19 @@ public class RescueCenter {
         drone.setAvailable(false);
         missions.add(mission);
         return mission;
+    }
+
+    private void validateMissionAssignment(
+            RescueOperator operator, Drone drone, String operatorId, int distanceKm) {
+        if (operator == null) {
+            throw new IllegalArgumentException("Operator does not exist");
+        }
+        if (distanceKm > drone.getMaxRangeKm()) {
+            throw new IllegalArgumentException("Distance exceeds drone autonomy");
+        }
+        if (hasActiveMission(operatorId)) {
+            throw new IllegalStateException("Operator already has an active mission");
+        }
     }
 
     private RescueOperator findOperator(String operatorId) {
@@ -100,18 +103,21 @@ public class RescueCenter {
 
     public Mission completeMission(String missionId) {
         Mission mission = findMission(missionId);
-        if (mission == null) {
-            throw new IllegalArgumentException("Mission does not exist");
-        }
-
-        if (mission.getStatus() == MissionStatus.COMPLETED) {
-            throw new IllegalStateException("Mission is already completed");
-        }
+        validateMissionCompletion(mission);
 
         mission.setStatus(MissionStatus.COMPLETED);
         mission.setEndDate(LocalDateTime.now());
         mission.getDrone().setAvailable(true);
         return mission;
+    }
+
+    private void validateMissionCompletion(Mission mission) {
+        if (mission == null) {
+            throw new IllegalArgumentException("Mission does not exist");
+        }
+        if (mission.getStatus() == MissionStatus.COMPLETED) {
+            throw new IllegalStateException("Mission is already completed");
+        }
     }
 
     private Mission findMission(String missionId) {
