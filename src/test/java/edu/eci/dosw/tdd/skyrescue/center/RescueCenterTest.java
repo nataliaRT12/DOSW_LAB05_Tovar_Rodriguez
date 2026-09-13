@@ -45,4 +45,19 @@ class RescueCenterTest {
         assertFalse(result);
     }
 
+    @Test
+    void shouldNotRegisterDroneWhenIdIsDuplicated() {
+        // Arrange
+        RescueCenter center = new RescueCenter();
+        Drone first = new Drone("D1", "Matrice300", 15);
+        Drone duplicate = new Drone("D1", "Phantom4", 10);
+        center.addDrone(first);
+
+        // Act
+        boolean result = center.addDrone(duplicate);
+
+        // Assert
+        assertFalse(result);
+    }
+
 }
