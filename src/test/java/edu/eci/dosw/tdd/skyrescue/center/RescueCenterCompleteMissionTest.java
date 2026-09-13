@@ -31,4 +31,10 @@ class RescueCenterCompleteMissionTest {
         assertNotNull(completed.getEndDate());
         assertTrue(center.assignMission("op1", "d1", "Zona Sur", 20) != null);
     }
+
+    @Test
+    void shouldThrowExceptionWhenCompletingNonExistentMission() {
+        assertThrows(IllegalArgumentException.class,
+                () -> center.completeMission("mision-inexistente"));
+    }
 }
