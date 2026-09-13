@@ -44,6 +44,7 @@ public class RescueCenter {
         if (id == null || id.isBlank()) {
             return false;
         }
+        drones.put(id, drone);
         return false;
     }
 
