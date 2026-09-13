@@ -37,6 +37,14 @@ public class RescueCenter {
      * @return true if it was registered; false otherwise.
      */
     public boolean addDrone(Drone drone) {
+        if (!isValidDrone(drone)) {
+            return false;
+        }
+        drones.put(drone.getId(), drone);
+        return true;
+    }
+
+    private boolean isValidDrone(Drone drone) {
         if (drone == null) {
             return false;
         }
@@ -44,11 +52,7 @@ public class RescueCenter {
         if (id == null || id.isBlank()) {
             return false;
         }
-        if (drones.containsKey(id)) {
-            return false;
-        }
-        drones.put(id, drone);
-        return true;
+        return !drones.containsKey(id);
     }
 
 
