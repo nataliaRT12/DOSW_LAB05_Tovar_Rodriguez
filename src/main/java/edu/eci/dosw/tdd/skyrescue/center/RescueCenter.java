@@ -37,9 +37,12 @@ public class RescueCenter {
      * @return true if it was registered; false otherwise.
      */
     public boolean addDrone(Drone drone) {
-        // TODO Implement using TDD.
-        return false;
+        if (drone == null) {
+            return false;
+        }
+        return true;
     }
+
 
     /**
      * Assigns an emergency mission to an operator and an available drone.
