@@ -5,10 +5,12 @@ import edu.eci.dosw.tdd.skyrescue.mission.Mission;
 import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
 import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Coordinates drones, operators and emergency missions.
@@ -56,7 +58,6 @@ public class RescueCenter {
         return !drones.containsKey(id);
     }
 
-
     /**
      * Assigns an emergency mission to an operator and an available drone.
      *
@@ -86,6 +87,7 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
+
         Drone drone = findDroneById(droneId);
         if (drone == null) {
             throw new IllegalArgumentException("Drone not found: " + droneId);
@@ -93,15 +95,27 @@ public class RescueCenter {
         if (!drone.isAvailable()) {
             throw new IllegalStateException("Drone is not available: " + droneId);
         }
+
         RescueOperator operator = findOperatorById(operatorId);
+        if (operator == null) {
+            throw new IllegalArgumentException("Operator does not exist");
+        }
+
+        if (distanceKm > drone.getMaxRangeKm()) {
+            throw new IllegalArgumentException("Distance exceeds drone autonomy");
+        }
+
+        if (hasActiveMission(operatorId)) {
+            throw new IllegalStateException("Operator already has an active mission");
+        }
 
         Mission mission = new Mission(
-                java.util.UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
                 location,
                 distanceKm,
                 drone,
                 operator,
-                java.time.LocalDateTime.now(),
+                LocalDateTime.now(),
                 MissionStatus.ACTIVE);
 
         drone.setAvailable(false);
@@ -119,8 +133,33 @@ public class RescueCenter {
     private Drone findDroneById(String droneId) {
         return drones.get(droneId);
     }
-     
-     /* @param missionId mission identifier.
+
+    private boolean hasActiveMission(String operatorId) {
+        for (Mission mission : missions) {
+            if (mission.getOperator().getId().equals(operatorId)
+                    && mission.getStatus() == MissionStatus.ACTIVE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Completes an active mission.
+     *
+     * Rules:
+     * - missionId must be valid.
+     * - The mission must exist.
+     * - An already COMPLETED mission cannot be completed again.
+     * - The mission status changes to COMPLETED.
+     * - The end date is the current date/time.
+     * - The drone assigned to the mission becomes available again.
+     *
+     * Suggested error policy:
+     * - Invalid/nonexistent mission -> IllegalArgumentException.
+     * - Mission already completed -> IllegalStateException.
+     *
+     * @param missionId mission identifier.
      * @return completed mission.
      */
     public Mission completeMission(String missionId) {
