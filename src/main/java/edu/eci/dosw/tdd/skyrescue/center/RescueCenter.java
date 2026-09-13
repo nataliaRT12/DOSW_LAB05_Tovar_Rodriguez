@@ -86,8 +86,11 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
-        RescueOperator operator = findOperatorById(operatorId);
         Drone drone = findDroneById(droneId);
+        if (drone == null) {
+            throw new IllegalArgumentException("Drone not found: " + droneId);
+        }
+        RescueOperator operator = findOperatorById(operatorId);
 
         Mission mission = new Mission(
                 java.util.UUID.randomUUID().toString(),
