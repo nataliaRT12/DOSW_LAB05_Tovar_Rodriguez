@@ -90,6 +90,9 @@ public class RescueCenter {
         if (drone == null) {
             throw new IllegalArgumentException("Drone not found: " + droneId);
         }
+        if (!drone.isAvailable()) {
+            throw new IllegalStateException("Drone is not available: " + droneId);
+        }
         RescueOperator operator = findOperatorById(operatorId);
 
         Mission mission = new Mission(
