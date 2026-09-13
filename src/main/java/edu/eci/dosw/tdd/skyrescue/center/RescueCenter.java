@@ -37,9 +37,24 @@ public class RescueCenter {
      * @return true if it was registered; false otherwise.
      */
     public boolean addDrone(Drone drone) {
-        // TODO Implement using TDD.
-        return false;
+        if (!isValidDrone(drone)) {
+            return false;
+        }
+        drones.put(drone.getId(), drone);
+        return true;
     }
+
+    private boolean isValidDrone(Drone drone) {
+        if (drone == null) {
+            return false;
+        }
+        String id = drone.getId();
+        if (id == null || id.isBlank()) {
+            return false;
+        }
+        return !drones.containsKey(id);
+    }
+
 
     /**
      * Assigns an emergency mission to an operator and an available drone.
