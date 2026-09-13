@@ -40,7 +40,11 @@ public class RescueCenter {
         if (drone == null) {
             return false;
         }
-        return true;
+        String id = drone.getId();
+        if (id == null || id.isBlank()) {
+            return false;
+        }
+        return false;
     }
 
 
