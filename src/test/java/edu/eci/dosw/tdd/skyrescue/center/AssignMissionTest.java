@@ -31,6 +31,17 @@ class AssignMissionTest {
 
     }
 
-    
+    @Test
+    void shouldNotAssignMissionWhenDroneDoesNotExist() {
+        // Arrange
+        RescueCenter center = new RescueCenter();
+        RescueOperator operator = new RescueOperator("OP1", "Carlos");
+        center.addOperator(operator);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> center.assignMission("OP1", "D-UNKNOWN", "Bogota", 10));
+    }
+ 
 
 }
