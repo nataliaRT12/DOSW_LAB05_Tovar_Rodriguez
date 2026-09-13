@@ -37,4 +37,13 @@ class RescueCenterCompleteMissionTest {
         assertThrows(IllegalArgumentException.class,
                 () -> center.completeMission("mision-inexistente"));
     }
+
+    @Test
+    void shouldThrowExceptionWhenCompletingMissionTwice() {
+        Mission mission = center.assignMission("op1", "d1", "Zona Norte", 50);
+        center.completeMission(mission.getId());
+
+        assertThrows(IllegalStateException.class,
+                () -> center.completeMission(mission.getId()));
+    }
 }
