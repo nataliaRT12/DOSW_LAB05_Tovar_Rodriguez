@@ -2,12 +2,15 @@ package edu.eci.dosw.tdd.skyrescue.center;
 
 import edu.eci.dosw.tdd.skyrescue.drone.Drone;
 import edu.eci.dosw.tdd.skyrescue.mission.Mission;
+import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
 import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Coordinates drones, operators and emergency missions.
@@ -55,7 +58,6 @@ public class RescueCenter {
         return !drones.containsKey(id);
     }
 
-
     /**
      * Assigns an emergency mission to an operator and an available drone.
      *
@@ -85,8 +87,51 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
-        // TODO Implement using TDD.
+        RescueOperator operator = findOperator(operatorId);
+        if (operator == null) {
+            throw new IllegalArgumentException("Operator does not exist");
+        }
+
+        Drone drone = drones.get(droneId);
+        if (distanceKm > drone.getMaxRangeKm()) {
+            throw new IllegalArgumentException("Distance exceeds drone autonomy");
+        }
+
+        if (hasActiveMission(operatorId)) {
+            throw new IllegalStateException("Operator already has an active mission");
+        }
+
+        Mission mission = new Mission(
+                UUID.randomUUID().toString(),
+                location,
+                distanceKm,
+                drone,
+                operator,
+                LocalDateTime.now(),
+                MissionStatus.ACTIVE);
+
+        drone.setAvailable(false);
+        missions.add(mission);
+        return mission;
+    }
+
+    private RescueOperator findOperator(String operatorId) {
+        for (RescueOperator operator : operators) {
+            if (operator.getId().equals(operatorId)) {
+                return operator;
+            }
+        }
         return null;
+    }
+
+    private boolean hasActiveMission(String operatorId) {
+        for (Mission mission : missions) {
+            if (mission.getOperator().getId().equals(operatorId)
+                    && mission.getStatus() == MissionStatus.ACTIVE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
