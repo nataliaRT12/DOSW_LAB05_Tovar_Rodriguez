@@ -104,6 +104,10 @@ public class RescueCenter {
             throw new IllegalArgumentException("Mission does not exist");
         }
 
+        if (mission.getStatus() == MissionStatus.COMPLETED) {
+            throw new IllegalStateException("Mission is already completed");
+        }
+
         mission.setStatus(MissionStatus.COMPLETED);
         mission.setEndDate(LocalDateTime.now());
         mission.getDrone().setAvailable(true);
