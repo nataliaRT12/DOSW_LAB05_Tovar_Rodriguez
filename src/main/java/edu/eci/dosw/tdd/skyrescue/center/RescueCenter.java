@@ -84,9 +84,23 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
+        RescueOperator operator = findOperator(operatorId);
+        if (operator == null) {
+            throw new IllegalArgumentException("Operator does not exist");
+        }
+
         Drone drone = drones.get(droneId);
         if (distanceKm > drone.getMaxRangeKm()) {
             throw new IllegalArgumentException("Distance exceeds drone autonomy");
+        }
+        return null;
+    }
+
+    private RescueOperator findOperator(String operatorId) {
+        for (RescueOperator operator : operators) {
+            if (operator.getId().equals(operatorId)) {
+                return operator;
+            }
         }
         return null;
     }
