@@ -32,5 +32,17 @@ class RescueCenterTest {
         assertFalse(result);
     }
 
+    @Test
+    void shouldNotRegisterDroneWhenIdIsBlank() {
+        // Arrange
+        RescueCenter center = new RescueCenter();
+        Drone drone = new Drone("   ", "Matrice300", 15);
+
+        // Act
+        boolean result = center.addDrone(drone);
+
+        // Assert
+        assertFalse(result);
+    }
 
 }
