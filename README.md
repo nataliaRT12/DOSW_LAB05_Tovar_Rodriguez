@@ -131,7 +131,7 @@ Se evidencia una mejoria en la calidad del codigo, pues ya no se muestran errore
    La validación de disponibilidad del dron, antes en línea dentro de `assignMission`, se extrajo a un método auxiliar `validateDroneAvailability()`, sin alterar el resultado de ninguna prueba.
 
 3. **¿Qué casos adicionales aparecieron al revisar la cobertura?**
-
+	Al revisar la cobertura con JaCoCo para la asignación de misiones en ⁠RescueCenter⁠, aparecieron casos de borde que requerían validaciones adicionales, tales como intentar asignar misiones a drones o operadores inexistentes, procesar solicitudes para drones ocupados, asignar a operadores que ya tenían una misión activa en curso y validar que la distancia de la misión no superara el límite de autonomía del dron.
 
 4. **¿Qué hallazgo de SonarQube produjo un cambio real en el código?**
    SonarQube detectó (severidad Medium) que en `shouldThrowExceptionWhenCompletingMissionTwice()` el lambda de `assertThrows` contenía dos invocaciones que podían lanzar excepción (`mission.getId()` y `completeMission(...)`), lo que hacía la prueba menos precisa sobre cuál llamada se esperaba que fallara. Se corrigió extrayendo `mission.getId()` fuera del lambda, dejando una única invocación dentro del `assertThrows`.
