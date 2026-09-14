@@ -5,6 +5,7 @@ import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
 
 import java.time.LocalDateTime;
 
+
 public class Mission {
 
     private final String id;

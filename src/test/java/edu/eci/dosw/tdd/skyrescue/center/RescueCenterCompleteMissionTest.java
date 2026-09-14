@@ -41,12 +41,13 @@ class RescueCenterCompleteMissionTest {
     @Test
     void shouldThrowExceptionWhenCompletingMissionTwice() {
         Mission mission = center.assignMission("op1", "d1", "Zona Norte", 50);
-        center.completeMission(mission.getId());
+        String missionId = mission.getId();
+        center.completeMission(missionId);
 
         assertThrows(IllegalStateException.class,
-                () -> center.completeMission(mission.getId()));
+                () -> center.completeMission(missionId));
     }
-
+    
     @Test
     void shouldNotAffectOtherActiveMissionWhenCompletingOne() {
         center.addOperator(new RescueOperator("op2", "Operador 2"));

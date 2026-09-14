@@ -6,6 +6,7 @@ import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
 import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public class RescueCenter {
                 distanceKm,
                 drone,
                 operator,
-                LocalDateTime.now(),
+                LocalDateTime.now(ZoneOffset.UTC),
                 MissionStatus.ACTIVE);
 
         drone.setAvailable(false);
@@ -109,7 +110,7 @@ public class RescueCenter {
         validateMissionCompletion(mission);
 
         mission.setStatus(MissionStatus.COMPLETED);
-        mission.setEndDate(LocalDateTime.now());
+        mission.setEndDate(LocalDateTime.now(ZoneOffset.UTC));
         mission.getDrone().setAvailable(true);
         return mission;
     }
