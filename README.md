@@ -116,6 +116,7 @@ Se evidencia una mejoria en la calidad del codigo, pues ya no se muestran errore
 - PR (Clases base): [feature/skyrescue-classes](https://github.com/nataliaRT12/DOSW_LAB05_Tovar_Rodriguez/pulls?q=feature%3Askyrescue-classes)
 - PR (JUnit): [feature/junit-dependency](https://github.com/nataliaRT12/DOSW_LAB05_Tovar_Rodriguez/pulls?q=feature%3Ajunit-dependency)
 - PR (addDrone): [feature/tdd-add-drone-nr](https://github.com/nataliaRT12/DOSW_LAB05_Tovar_Rodriguez/pulls?q=feature%3Atdd-add-drone-nr)
+- PR (assignMission parte A): [feature/tdd-assign-mission-nr](https://github.com/nataliaRT12/DOSW_LAB05_Tovar_Rodriguez/pulls?q=feature%3Atdd-assign-mission-nr)
 - PR (assignMission parte B): [feature/tdd-assignMission-mt](https://github.com/nataliaRT12/DOSW_LAB05_Tovar_Rodriguez/pulls?q=feature%3Atdd-assignMission-mt)
 - PR (completeMission): [feature/tdd-completeMission-mt](https://github.com/nataliaRT12/DOSW_LAB05_Tovar_Rodriguez/pulls?q=feature%3Atdd-completeMission-mt)
 
